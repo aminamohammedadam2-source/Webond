@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webond – Connect Beyond</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#2563EB;--primary-h:#1D4ED8;--primary-l:#EFF6FF;--primary-xl:#DBEAFE;
+  --accent:#0EA5E9;--green:#10B981;--pink:#EC4899;--orange:#F59E0B;--purple:#8B5CF6;--red:#EF4444;
+  --bg:#F1F5F9;--card:#FFFFFF;--text:#0F172A;--text2:#334155;--muted:#64748B;
+  --border:#E2E8F0;--border2:#F1F5F9;--sidebar-w:240px;--r:16px;--r2:10px;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow2:0 4px 16px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+button,input,textarea,select{font-family:inherit;font-size:inherit}
+button{cursor:pointer;border:none;background:none}
+input,textarea{outline:none;border:none}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+.hidden{display:none!important}
+/* AUTH */
+#auth{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#1e3a8a 0%,#2563EB 40%,#0ea5e9 80%,#06b6d4 100%);position:relative;overflow:hidden}
+#auth::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:rgba(255,255,255,.04);top:-200px;right:-200px}
+#auth::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,.04);bottom:-150px;left:-100px}
+.auth-box{background:#fff;border-radius:24px;box-shadow:0 24px 64px rgba(0,0,0,.2);width:100%;max-width:440px;padding:36px 40px;position:relative;z-index:1;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.auth-logo{text-align:center;font-size:30px;font-weight:900;color:var(--primary);letter-spacing:-1px;margin-bottom:4px}
+.auth-logo span{color:var(--accent)}
+.auth-sub{text-align:center;color:var(--muted);font-size:13px;font-weight:500;margin-bottom:24px}
+.auth-tabs{display:flex;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:22px}
+.auth-tab{flex:1;padding:9px;text-align:center;border-radius:9px;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer;transition:.2s}
+.auth-tab.on{background:#fff;color:var(--text);box-shadow:var(--shadow)}
+.soc-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:11px 16px;border:1.5px solid var(--border);border-radius:12px;background:#fff;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;transition:.15s;margin-bottom:8px}
+.soc-btn:hover{background:var(--bg);border-color:#cbd5e1}
+.or-line{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px;font-weight:500;margin:16px 0}
+.or-line::before,.or-line::after{content:'';flex:1;height:1px;background:var(--border)}
+.fgrp{margin-bottom:14px}
+.flbl{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px}
+.finp{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;color:var(--text);transition:.2s;background:#fff}
+.finp:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.finp::placeholder{color:#94a3b8}
+.finp-pw{padding-right:44px}
+.pw-wrap{position:relative}
+.pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);display:flex;padding:4px;border-radius:6px;transition:.15s;background:none;border:none;cursor:pointer}
+.pw-eye:hover{background:var(--bg)}
+.pw-eye svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.forgotlink{text-align:right;margin-bottom:16px}
+.forgotlink a{font-size:12px;color:var(--primary);font-weight:600;cursor:pointer}
+.btn-auth{width:100%;padding:12px;background:var(--primary);color:#fff;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;transition:.15s;box-shadow:0 4px 12px rgba(37,99,235,.25)}
+.btn-auth:hover{background:var(--primary-h);transform:translateY(-1px)}
+.auth-bottom{text-align:center;margin-top:16px;font-size:13px;color:var(--muted)}
+.auth-bottom a{color:var(--primary);font-weight:700;cursor:pointer}
+.terms-note{font-size:11px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.6}
+.terms-note a{color:var(--primary);cursor:pointer}
+.auth-form{display:none}
+.auth-form.on{display:block}
+/* PLATFORM */
+#app{display:none;height:100vh;overflow:hidden}
+#app.on{display:flex}
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar::-webkit-scrollbar{display:none}
+.sb-logo{padding:20px 18px 14px;font-size:24px;font-weight:900;color:var(--primary);letter-spacing:-1px;cursor:pointer}
+.sb-logo span{color:var(--accent)}
+.sb-search-wrap{position:relative;padding:0 12px 12px}
+.sb-search-ico{position:absolute;left:22px;top:50%;transform:translateY(-50%);pointer-events:none}
+.sb-search-ico svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sb-search-inp{width:100%;padding:9px 12px 9px 36px;background:var(--bg);border-radius:10px;font-size:13px;color:var(--text);cursor:pointer;border:none}
+.sb-nav{flex:1;padding:0 8px}
+.sb-section{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;padding:10px 10px 4px;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:12px;font-size:14px;font-weight:600;color:var(--text2);cursor:pointer;transition:.15s;margin-bottom:2px;position:relative}
+.sb-item:hover{background:var(--bg);color:var(--text)}
+.sb-item.on{background:var(--primary-l);color:var(--primary)}
+.sb-item svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.sb-badge{background:var(--red);color:#fff;border-radius:20px;min-width:18px;height:18px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-left:auto;padding:0 4px}
+.sb-divider{height:1px;background:var(--border);margin:8px 14px}
+.sb-bottom{padding:12px}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;transition:.15s}
+.sb-user:hover{background:var(--bg)}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;background:var(--primary-xl);color:var(--primary)}
+/* LAYOUT */
+.main{flex:1;overflow-y:auto;background:var(--bg)}
+.main-inner{max-width:640px;margin:0 auto;padding:20px 16px 80px}
+.right-col{width:300px;flex-shrink:0;overflow-y:auto;padding:20px 14px}
+.right-col::-webkit-scrollbar{display:none}
+.widget{background:var(--card);border-radius:var(--r);border:1px solid var(--border);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow)}
+.widget-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px}
+.widget-title{font-size:14px;font-weight:700;color:var(--text)}
+.widget-more{font-size:12px;color:var(--primary);font-weight:600;cursor:pointer}
+.widget-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid var(--border2)}
+/* STORIES */
+.stories-wrap{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.stories-scroll{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.stories-scroll::-webkit-scrollbar{display:none}
+.story-item{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;transition:.15s}
+.story-item:hover{transform:translateY(-2px)}
+.story-ring{width:64px;height:64px;border-radius:50%;padding:2.5px;background:linear-gradient(135deg,#7C3AED,#EC4899,#F59E0B);display:flex;align-items:center;justify-content:center}
+.story-ring.mine{background:#f1f5f9}
+.story-av{width:58px;height:58px;border-radius:50%;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800}
+.story-lbl{font-size:11px;color:var(--muted);font-weight:600;max-width:64px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* COMPOSE */
+.compose{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:14px 16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.compose-top{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.compose-fake-inp{flex:1;padding:10px 16px;background:var(--bg);border-radius:22px;font-size:14px;color:var(--muted);cursor:pointer;font-weight:500;transition:.15s}
+.compose-fake-inp:hover{background:#e8eef5}
+.compose-acts{display:flex;border-top:1px solid var(--border2);padding-top:10px}
+.c-act{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:7px;border-radius:10px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:.15s}
+.c-act:hover{background:var(--bg);color:var(--text)}
+.c-act svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* POST */
+.post{background:var(--card);border-radius:var(--r);border:1px solid var(--border);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow);animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bubbleIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.post-head{display:flex;align-items:flex-start;gap:10px;padding:14px 16px 8px}
+.post-name{font-size:14px;font-weight:700;color:var(--text)}
+.post-time{font-size:12px;color:var(--muted);margin-top:1px}
+.post-more-btn{padding:6px;border-radius:8px;color:var(--muted);transition:.15s;display:flex;margin-left:auto}
+.post-more-btn:hover{background:var(--bg)}
+.post-more-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.post-body{padding:0 16px 10px;font-size:14px;color:var(--text);line-height:1.7}
+.htag{color:var(--primary);font-weight:600;cursor:pointer}
+.htag:hover{text-decoration:underline}
+.post-media{background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#94a3b8;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.post-media svg{width:40px;height:40px;stroke:currentColor;fill:none;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.post-img-grid{display:flex;gap:2px;border-top:1px solid var(--border)}
+.post-img-cell{background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:32px;position:relative;overflow:hidden;cursor:pointer;transition:.15s}
+.post-img-cell:hover{filter:brightness(.95)}
+.cell-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:800}
+.react-chip{background:var(--bg);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);transition:.15s}
+.react-chip:hover{background:var(--primary-l);border-color:var(--primary-xl)}
+.post-stats-row{display:flex;justify-content:space-between;padding:4px 16px 8px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border2)}
+.post-stats-row span{cursor:pointer;font-weight:500}
+.post-stats-row span:hover{text-decoration:underline;color:var(--text)}
+.post-acts{display:flex}
+.pact{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 0;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:.15s;border-right:1px solid var(--border2)}
+.pact:last-child{border-right:none}
+.pact:hover{background:var(--bg);color:var(--text)}
+.pact.liked{color:var(--pink)}
+.pact svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pact.liked svg{stroke:var(--pink);fill:#fce7f3}
+.pact.bookmarked svg{stroke:var(--primary);fill:var(--primary-xl)}
+.feat-banner{background:linear-gradient(135deg,var(--primary-l),#e0f2fe);border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:center;margin:0 16px 12px;border:1px solid #bfdbfe}
+.feat-ico{width:44px;height:44px;background:var(--primary);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.feat-ico svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* PAGE HEADER */
+.page-header{background:var(--card);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30;flex-shrink:0}
+.page-title{font-size:18px;font-weight:800;color:var(--text)}
+.icon-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;cursor:pointer;color:var(--muted);transition:.15s;position:relative}
+.icon-btn:hover{background:var(--bg);color:var(--text)}
+.icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tab-bar{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--card)}
+.tab{flex:1;padding:13px 0;text-align:center;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;transition:.15s}
+.tab.on{color:var(--primary);border-bottom-color:var(--primary)}
+.tab:hover:not(.on){color:var(--text)}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:10px;font-weight:700;padding:9px 18px;font-size:13px;cursor:pointer;transition:.15s;border:none}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.25)}
+.btn-primary:hover{background:var(--primary-h);transform:translateY(-1px)}
+.btn-outline{background:#fff;color:var(--primary);border:1.5px solid var(--primary)}
+.btn-outline:hover{background:var(--primary-l)}
+.btn-gray{background:var(--bg);color:var(--text);border:1.5px solid var(--border)}
+.btn-gray:hover{background:#e8eef5}
+.btn-red{background:#fef2f2;color:var(--red);border:1.5px solid #fecaca}
+.btn-red:hover{background:#fee2e2}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:20px}
+.btn-xs{padding:4px 10px;font-size:11px;border-radius:8px}
+.btn-full{width:100%}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* TOGGLE */
+.toggle{width:44px;height:24px;background:#e2e8f0;border-radius:12px;position:relative;cursor:pointer;transition:.25s;flex-shrink:0}
+.toggle.on{background:var(--primary)}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:.25s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle.on::after{left:calc(100% - 21px)}
+/* MESSAGES */
+.msgs-layout{display:flex;flex:1;overflow:hidden}
+.msgs-list{width:320px;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;background:var(--card)}
+.msgs-list-head{padding:16px 16px 10px;font-size:16px;font-weight:800;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.msgs-search{padding:10px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.msgs-search input{width:100%;padding:8px 12px;background:var(--bg);border-radius:22px;font-size:13px;color:var(--text)}
+.msgs-search input::placeholder{color:var(--muted)}
+.msgs-convs{flex:1;overflow-y:auto}
+.conv-item{display:flex;align-items:center;gap:11px;padding:12px 16px;cursor:pointer;transition:.15s;border-bottom:1px solid var(--border2)}
+.conv-item:hover,.conv-item.on{background:var(--primary-l)}
+.conv-item.on .conv-name{color:var(--primary)}
+.online-wrap{position:relative}
+.online-dot{position:absolute;bottom:1px;right:1px;width:11px;height:11px;background:var(--green);border-radius:50%;border:2.5px solid var(--card)}
+.conv-name{font-size:14px;font-weight:700}
+.conv-preview{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
+.conv-time{font-size:11px;color:var(--muted);flex-shrink:0}
+.unread-cnt{background:var(--primary);color:#fff;border-radius:20px;min-width:18px;height:18px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px;flex-shrink:0}
+.chat-pane{flex:1;display:flex;flex-direction:column;background:#fafbfc;overflow:hidden}
+.chat-head{padding:12px 18px;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
+.chat-head-name{font-size:15px;font-weight:700}
+.chat-head-status{font-size:12px;color:var(--green);font-weight:500}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:2px}
+.chat-date{text-align:center;font-size:11px;color:var(--muted);font-weight:600;margin:8px 0;position:relative}
+.chat-date::before,.chat-date::after{content:'';position:absolute;top:50%;height:1px;background:var(--border);width:30%}
+.chat-date::before{left:10%}.chat-date::after{right:10%}
+.bubble{max-width:66%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.55;animation:bubbleIn .2s ease}
+.b-in{background:#fff;color:var(--text);border:1px solid var(--border);border-bottom-left-radius:4px;align-self:flex-start}
+.b-out{background:var(--primary);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.btime{font-size:10px;color:var(--muted);margin-bottom:8px}
+.btime.out{text-align:right}
+.chat-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--card);border-top:1px solid var(--border);flex-shrink:0}
+.chat-inp{flex:1;padding:10px 14px;background:var(--bg);border-radius:22px;font-size:14px;color:var(--text)}
+.chat-inp::placeholder{color:var(--muted)}
+.chat-send{width:40px;height:40px;background:var(--primary);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;cursor:pointer}
+.chat-send:hover{background:var(--primary-h)}
+.chat-send svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chat-ico-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;color:var(--muted);cursor:pointer;transition:.15s}
+.chat-ico-btn:hover{background:var(--bg);color:var(--text)}
+.chat-ico-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* REELS */
+.reels-wrap{display:flex;flex-direction:column;align-items:center;overflow-y:auto;background:#000;flex:1}
+.reel-card{width:100%;max-width:420px;height:100vh;position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#111;overflow:hidden}
+.reel-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:100px;opacity:.3}
+.reel-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,transparent 30%,transparent 55%,rgba(0,0,0,.85) 100%)}
+.reel-right{position:absolute;right:14px;bottom:120px;display:flex;flex-direction:column;gap:20px;align-items:center;z-index:2}
+.reel-btn{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;cursor:pointer;transition:.15s}
+.reel-btn:hover{transform:scale(1.1)}
+.reel-btn svg{width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.reel-btn.rl svg{stroke:var(--pink);fill:var(--pink)}
+.reel-btn span{font-size:12px;font-weight:700}
+.reel-bottom{position:absolute;bottom:0;left:0;right:0;padding:20px 18px;z-index:2}
+.reel-user{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.reel-caption{color:rgba(255,255,255,.9);font-size:13px;line-height:1.5;margin-bottom:12px}
+.reel-sound{display:flex;align-items:center;gap:10px}
+.sound-disc{width:32px;height:32px;background:rgba(255,255,255,.15);border-radius:50%;animation:spin 3s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sound-bar{flex:1;background:rgba(255,255,255,.2);height:4px;border-radius:4px;overflow:hidden}
+.sound-progress{height:100%;background:#fff;border-radius:4px;width:55%}
+/* EXPLORE */
+.explore-trending{background:var(--card);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow);margin-bottom:14px}
+.trend-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border2);cursor:pointer;transition:.15s}
+.trend-item:last-child{border-bottom:none}
+.trend-item:hover{background:var(--bg)}
+/* NOTIFICATIONS */
+.notif-item{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border2);cursor:pointer;transition:.15s}
+.notif-item:hover{background:var(--bg)}
+.notif-item.unread{background:#eff6ff}
+.notif-ico{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+/* PROFILE */
+.profile-cover{height:200px;background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 55%,var(--purple) 100%);position:relative;border-radius:var(--r) var(--r) 0 0}
+.profile-av-box{position:absolute;bottom:-42px;left:22px}
+.pro-av{width:88px;height:88px;border-radius:50%;border:4px solid #fff;font-size:24px;font-weight:900;display:flex;align-items:center;justify-content:center;background:var(--primary-xl);color:var(--primary)}
+.p-stat-n{font-size:18px;font-weight:900}
+.p-stat-l{font-size:12px;color:var(--muted);font-weight:500}
+.p-tab{flex:1;padding:12px 0;text-align:center;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;transition:.15s}
+.p-tab.on{color:var(--primary);border-bottom-color:var(--primary)}
+.media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px}
+.media-cell{aspect-ratio:1;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;transition:.15s}
+.media-cell:hover{filter:brightness(.9)}
+/* SETTINGS */
+.settings-layout{display:flex;gap:20px;padding:24px;max-width:960px;margin:0 auto}
+.settings-sidebar{width:200px;flex-shrink:0}
+.settings-nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;font-size:14px;font-weight:600;color:var(--text2);cursor:pointer;transition:.15s;margin-bottom:3px}
+.settings-nav-item:hover,.settings-nav-item.on{background:var(--primary-l);color:var(--primary)}
+.settings-nav-item svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.settings-panel{flex:1;background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:28px;box-shadow:var(--shadow)}
+.settings-panel-title{font-size:18px;font-weight:800;margin-bottom:22px}
+.settings-row{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--border2)}
+.settings-row:last-child{border-bottom:none}
+.settings-row-ico{font-size:26px;flex-shrink:0}
+.settings-row-title{font-size:14px;font-weight:700}
+.settings-row-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.settings-section-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin:20px 0 8px}
+/* GROUPS & EVENTS */
+.group-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow)}
+.group-cover{height:90px;display:flex;align-items:center;justify-content:center;font-size:44px}
+.group-body{padding:14px 16px}
+.group-name{font-size:15px;font-weight:800}
+.group-meta{font-size:12px;color:var(--muted);margin-top:3px}
+.page-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:16px;display:flex;gap:14px;align-items:center;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer;transition:.15s}
+.page-card:hover{transform:translateY(-1px);box-shadow:var(--shadow2)}
+.event-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:16px;margin-bottom:10px;box-shadow:var(--shadow)}
+.event-date-badge{background:var(--primary-l);color:var(--primary);border-radius:10px;padding:8px 12px;text-align:center;flex-shrink:0;min-width:52px}
+.event-date-day{font-size:22px;font-weight:900;line-height:1}
+.event-date-mon{font-size:11px;font-weight:700}
+/* OVERLAY / MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.overlay.show{display:flex;animation:fadeOv .2s ease}
+@keyframes fadeOv{from{opacity:0}to{opacity:1}}
+.modal{background:#fff;border-radius:20px;overflow:hidden;animation:modalIn .25s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.96)translateY(10px)}to{opacity:1;transform:scale(1)translateY(0)}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.modal-title{font-size:16px;font-weight:800}
+.modal-close{padding:6px;border-radius:8px;color:var(--muted);transition:.15s;display:flex;background:none;border:none;cursor:pointer}
+.modal-close:hover{background:var(--bg)}
+.modal-close svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.modal-body{padding:20px}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+/* STORY FULLSCREEN */
+.story-full{width:380px;height:680px;background:#111;border-radius:20px;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.story-bars{display:flex;gap:4px;padding:14px 16px 8px;position:relative;z-index:2}
+.story-bar-seg{flex:1;height:3px;background:rgba(255,255,255,.3);border-radius:2px;overflow:hidden}
+.story-bar-fill{height:100%;background:#fff;border-radius:2px;animation:sfill 4s linear forwards}
+@keyframes sfill{from{width:0}to{width:100%}}
+.story-header{display:flex;align-items:center;gap:10px;padding:0 16px 12px;color:#fff;position:relative;z-index:2}
+.story-close-btn{margin-left:auto;background:none;border:none;color:#fff;cursor:pointer;opacity:.8;font-size:20px;line-height:1}
+.story-center{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#fff;position:relative;z-index:2}
+.story-reply{display:flex;gap:10px;padding:14px 16px;position:relative;z-index:2;flex-shrink:0}
+.story-reply-inp{flex:1;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:22px;padding:10px 16px;font-size:13px;color:#fff;font-family:inherit;outline:none}
+.story-reply-inp::placeholder{color:rgba(255,255,255,.6)}
+/* DROPDOWN */
+.dropdown{position:fixed;background:#fff;border-radius:12px;border:1px solid var(--border);box-shadow:0 8px 24px rgba(0,0,0,.12);min-width:180px;z-index:200;overflow:hidden;animation:dropIn .15s ease}
+@keyframes dropIn{from{opacity:0;transform:scale(.95)translateY(-6px)}to{opacity:1;transform:scale(1)translateY(0)}}
+.drop-item{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:14px;color:var(--text);cursor:pointer;transition:.15s}
+.drop-item:hover{background:var(--bg)}
+.drop-item svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.drop-item.red{color:var(--red)}
+.drop-item.red svg{stroke:var(--red)}
+.drop-divider{height:1px;background:var(--border);margin:4px 0}
+/* COMMENTS */
+.comment-item{display:flex;gap:10px;margin-bottom:14px;animation:fadeIn .2s ease}
+.comment-bubble{background:var(--bg);border-radius:14px;padding:10px 14px;flex:1}
+.comment-author{font-size:13px;font-weight:700}
+.comment-text{font-size:13px;margin-top:2px;line-height:1.5}
+.comment-act{font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;margin-right:10px;margin-top:5px;display:inline-block}
+.comment-act:hover{color:var(--text)}
+.comment-act.liked{color:var(--pink)}
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(10px);background:#0f172a;color:#fff;padding:11px 22px;border-radius:14px;font-size:13px;font-weight:700;z-index:9999;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* SEARCH */
+.search-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:80;display:none;align-items:flex-start;justify-content:center;padding-top:80px}
+.search-overlay.show{display:flex}
+.search-box{background:#fff;border-radius:20px;width:560px;max-width:95vw;box-shadow:0 24px 64px rgba(0,0,0,.2);overflow:hidden}
+.search-inp-wrap{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--border)}
+.search-main-inp{flex:1;font-size:16px;color:var(--text);background:transparent;border:none;outline:none}
+.search-main-inp::placeholder{color:var(--muted)}
+.search-results{padding:8px 0;max-height:400px;overflow-y:auto}
+.search-result{display:flex;align-items:center;gap:12px;padding:12px 18px;cursor:pointer;transition:.15s}
+.search-result:hover{background:var(--bg)}
+/* EMPTY STATE */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;text-align:center;color:var(--muted)}
+.empty-state .ico{font-size:56px;margin-bottom:14px}
+.empty-state h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
+/* PAGE CONTAINERS */
+.page{display:none;flex:1;overflow:hidden;flex-direction:column}
+.page.on{display:flex}
+/* MOBILE NAV */
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);z-index:40;padding:6px 0 16px}
+.mob-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:var(--muted);font-size:10px;font-weight:600;padding:4px 0}
+.mob-nav-item.on{color:var(--primary)}
+.mob-nav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mob-nav-plus{flex:1;display:flex;align-items:center;justify-content:center}
+.mob-plus-btn{width:50px;height:50px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;box-shadow:0 4px 16px rgba(37,99,235,.3);margin-top:-10px;cursor:pointer}
+@media(max-width:1200px){.right-col{display:none}}
+@media(max-width:860px){.msgs-list{width:260px}}
+@media(max-width:700px){.sidebar{display:none}.mob-nav{display:flex}}
+</style>
+</head>
+<body>
+<!-- ===== AUTH ===== -->
+<div id="auth">
+  <div class="auth-box">
+    <div class="auth-logo">Web<span>ond</span> 🌐</div>
+    <div class="auth-sub">Connect Beyond Limits</div>
+    <div class="auth-tabs">
+      <div class="auth-tab on" id="tab-login" onclick="authTab('login')">Sign In</div>
+      <div class="auth-tab" id="tab-signup" onclick="authTab('signup')">Sign Up</div>
+    </div>
+    <!-- LOGIN -->
+    <div class="auth-form on" id="form-login">
+      <div class="soc-btn" onclick="socialAuth('Google')">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </div>
+      <div class="soc-btn" onclick="socialAuth('Apple')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09z"/></svg>
+        Continue with Apple
+      </div>
+      <div class="soc-btn" onclick="socialAuth('Facebook')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Continue with Facebook
+      </div>
+      <div class="or-line">or sign in with email</div>
+      <div class="fgrp"><label class="flbl">Email or Phone</label><input class="finp" type="text" placeholder="you@email.com" id="l-email"></div>
+      <div class="fgrp"><label class="flbl">Password</label><div class="pw-wrap"><input class="finp finp-pw" type="password" placeholder="Your password" id="l-pass"><button class="pw-eye" onclick="toggleEye('l-pass',this)"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+      <div class="forgotlink"><a onclick="toast('Reset email sent! Check your inbox 📧')">Forgot password?</a></div>
+      <button class="btn-auth" onclick="doLogin()">Sign In</button>
+      <div class="auth-bottom">Don't have an account? <a onclick="authTab('signup')">Sign Up</a></div>
+    </div>
+    <!-- SIGNUP -->
+    <div class="auth-form" id="form-signup">
+      <div class="soc-btn" onclick="socialAuth('Google')">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Sign up with Google
+      </div>
+      <div class="or-line">or sign up with email</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fgrp"><label class="flbl">First Name</label><input class="finp" type="text" placeholder="Yusuf" id="s-fn"></div>
+        <div class="fgrp"><label class="flbl">Last Name</label><input class="finp" type="text" placeholder="Abubakar" id="s-ln"></div>
+      </div>
+      <div class="fgrp"><label class="flbl">Username</label><input class="finp" type="text" placeholder="@yushat" id="s-un"></div>
+      <div class="fgrp"><label class="flbl">Email</label><input class="finp" type="email" placeholder="you@email.com" id="s-em"></div>
+      <div class="fgrp"><label class="flbl">Password</label><div class="pw-wrap"><input class="finp finp-pw" type="password" placeholder="Create strong password" id="s-pw"><button class="pw-eye" onclick="toggleEye('s-pw',this)"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+      <button class="btn-auth" onclick="doSignup()">Create Account</button>
+      <div class="terms-note">By creating an account you agree to our <a>Terms</a> and <a>Privacy Policy</a>.</div>
+      <div class="auth-bottom">Already have an account? <a onclick="authTab('login')">Sign In</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-logo" onclick="goPage('home')">Web<span>ond</span></div>
+    <div class="sb-search-wrap">
+      <div class="sb-search-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+      <input class="sb-search-inp" placeholder="Search Webond..." onclick="openSearch()" readonly>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-item on" id="sb-home" onclick="goPage('home')"><svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
+      <div class="sb-item" id="sb-explore" onclick="goPage('explore')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Explore</div>
+      <div class="sb-item" id="sb-reels" onclick="goPage('reels')"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Reels</div>
+      <div class="sb-item" id="sb-messages" onclick="goPage('messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messages<span class="sb-badge" id="msg-badge">3</span></div>
+      <div class="sb-item" id="sb-notifications" onclick="goPage('notifications')"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications<span class="sb-badge" style="background:var(--orange)" id="notif-badge">5</span></div>
+      <div class="sb-divider"></div>
+      <div class="sb-section">Discover</div>
+      <div class="sb-item" id="sb-groups" onclick="goPage('groups')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Groups</div>
+      <div class="sb-item" id="sb-events" onclick="goPage('events')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Events</div>
+      <div class="sb-divider"></div>
+      <div class="sb-item" id="sb-profile" onclick="goPage('profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</div>
+      <div class="sb-item" id="sb-settings" onclick="goPage('settings')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</div>
+    </nav>
+    <div class="sb-bottom">
+      <div class="sb-user" onclick="goPage('profile')">
+        <div class="av" id="sb-av" style="width:38px;height:38px">YT</div>
+        <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="sb-uname">Yushat</div><div style="font-size:11px;color:var(--muted)" id="sb-uhandle">@yushat</div></div>
+        <button onclick="event.stopPropagation();showUserDrop(this)" style="padding:4px;border-radius:6px;color:var(--muted);display:flex;transition:.15s;background:none;border:none" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background=''"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- PAGES WRAPPER -->
+  <div style="flex:1;display:flex;overflow:hidden;flex-direction:column">
+
+    <!-- HOME -->
+    <div class="page on" id="page-home">
+      <div style="display:flex;flex:1;overflow:hidden">
+        <div class="main">
+          <div class="main-inner">
+            <div class="stories-wrap">
+              <div style="font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px">Stories & Status</div>
+              <div class="stories-scroll" id="stories-row"></div>
+            </div>
+            <div class="compose">
+              <div class="compose-top">
+                <div class="av" id="comp-av" style="width:42px;height:42px">YT</div>
+                <div class="compose-fake-inp" onclick="openCreatePost()">What's on your mind, <span id="comp-name">Yushat</span>?</div>
+              </div>
+              <div class="compose-acts">
+                <div class="c-act" onclick="openCreatePost('photo')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>Photo/Video</div>
+                <div class="c-act" onclick="openCreatePost('live')"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Go Live</div>
+                <div class="c-act" onclick="openCreatePost('feeling')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>Feeling</div>
+                <div class="c-act" onclick="openCreatePost('event')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Event</div>
+              </div>
+            </div>
+            <div id="feed-container"></div>
+          </div>
+        </div>
+        <div class="right-col">
+          <div class="widget"><div class="widget-head"><span class="widget-title">🔥 Trending</span><span class="widget-more" onclick="goPage('explore')">See all</span></div><div id="trending-widget"></div></div>
+          <div class="widget"><div class="widget-head"><span class="widget-title">👥 People to Follow</span></div><div id="suggest-widget"></div></div>
+          <div style="font-size:11px;color:#94a3b8;padding:0 4px;line-height:2">Privacy · Terms · Help · About<br>© 2026 Webond · Built by Yushat ❤️</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPLORE -->
+    <div class="page" id="page-explore">
+      <div class="page-header"><span class="page-title">Explore</span></div>
+      <div class="main" style="flex:1"><div class="main-inner">
+        <div style="background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:16px;box-shadow:var(--shadow)">
+          <svg width="18" height="18" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input id="explore-inp" style="flex:1;font-size:15px;color:var(--text);background:transparent;border:none;outline:none" placeholder="Search people, posts, hashtags..." oninput="liveSearch(this.value)">
+          <div style="display:flex;gap:6px" id="explore-filters">
+            <span class="btn btn-primary btn-sm" onclick="setFilter(this,'all')">All</span>
+            <span class="btn btn-gray btn-sm" onclick="setFilter(this,'people')">People</span>
+            <span class="btn btn-gray btn-sm" onclick="setFilter(this,'posts')">Posts</span>
+            <span class="btn btn-gray btn-sm" onclick="setFilter(this,'tags')">Tags</span>
+          </div>
+        </div>
+        <div id="explore-results"></div>
+        <div id="explore-trending-section"></div>
+      </div></div>
+    </div>
+
+    <!-- REELS -->
+    <div class="page" id="page-reels" style="background:#000">
+      <div class="reels-wrap" id="reels-container"></div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div class="page" id="page-messages">
+      <div class="msgs-layout" style="flex:1;overflow:hidden">
+        <div class="msgs-list">
+          <div class="msgs-list-head">Messages<button class="btn btn-primary btn-xs" onclick="toast('New chat coming soon!')">New Chat</button></div>
+          <div class="msgs-search"><input placeholder="Search messages..." oninput="filterConvs(this.value)"></div>
+          <div class="msgs-convs" id="convs-list"></div>
+        </div>
+        <div class="chat-pane">
+          <div class="chat-head">
+            <div class="av" id="chat-av" style="width:42px;height:42px">FA</div>
+            <div style="flex:1"><div class="chat-head-name" id="chat-pname">Fatima Aliyu</div><div class="chat-head-status" id="chat-status">● Active now</div></div>
+            <div style="display:flex;gap:6px">
+              <div class="icon-btn" onclick="toast('Voice call starting...')"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.56 16.92z"/></svg></div>
+              <div class="icon-btn" onclick="toast('Video call starting...')"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+              <div class="icon-btn" onclick="showChatMenu(this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></div>
+            </div>
+          </div>
+          <div class="chat-msgs" id="chat-msgs"></div>
+          <div class="chat-bar">
+            <div class="chat-ico-btn" onclick="toast('Attach file')"><svg viewBox="0 0 24 24"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></div>
+            <div class="chat-ico-btn" onclick="toast('Send image')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></div>
+            <input class="chat-inp" id="chat-text" placeholder="Type a message..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}">
+            <div class="chat-ico-btn" onclick="toast('Emoji')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></div>
+            <button class="chat-send" onclick="sendMessage()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="page" id="page-notifications">
+      <div class="page-header"><span class="page-title">Notifications</span><button class="btn btn-gray btn-sm" onclick="markAllRead()">Mark all read</button></div>
+      <div class="main" style="flex:1"><div style="background:var(--card);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;margin:16px;box-shadow:var(--shadow)" id="notifs-list"></div></div>
+    </div>
+
+    <!-- GROUPS -->
+    <div class="page" id="page-groups">
+      <div class="page-header"><span class="page-title">Groups</span><button class="btn btn-primary btn-sm" onclick="toast('Create group coming soon!')">+ Create Group</button></div>
+      <div class="main" style="flex:1"><div class="main-inner">
+        <div class="tab-bar" style="border-radius:var(--r) var(--r) 0 0;margin-bottom:14px">
+          <div class="tab on" onclick="tabSwitch(this)">My Groups</div>
+          <div class="tab" onclick="tabSwitch(this)">Discover</div>
+          <div class="tab" onclick="tabSwitch(this)">Invitations</div>
+        </div>
+        <div id="groups-list"></div>
+      </div></div>
+    </div>
+
+    <!-- EVENTS -->
+    <div class="page" id="page-events">
+      <div class="page-header"><span class="page-title">Events</span><button class="btn btn-primary btn-sm" onclick="toast('Create Event coming soon!')">+ Create Event</button></div>
+      <div class="main" style="flex:1"><div class="main-inner">
+        <div class="tab-bar" style="border-radius:var(--r) var(--r) 0 0;margin-bottom:14px">
+          <div class="tab on" onclick="tabSwitch(this)">Upcoming</div>
+          <div class="tab" onclick="tabSwitch(this)">Going</div>
+          <div class="tab" onclick="tabSwitch(this)">Past Events</div>
+        </div>
+        <div id="events-list"></div>
+      </div></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="page-profile">
+      <div class="main" style="flex:1"><div class="main-inner" style="max-width:760px">
+        <div style="background:var(--card);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow)">
+          <div class="profile-cover">
+            <button style="position:absolute;bottom:12px;right:12px;background:rgba(255,255,255,.85);border:none;border-radius:10px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer" onclick="toast('Change cover photo')">Change Cover</button>
+            <div class="profile-av-box"><div class="pro-av" id="prof-av">YT</div></div>
+          </div>
+          <div style="padding:52px 22px 18px">
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:14px">
+              <button class="btn btn-gray btn-sm" onclick="openEditProfile()">✏️ Edit Profile</button>
+              <button class="btn btn-gray btn-sm" onclick="shareProfile()">🔗 Share</button>
+            </div>
+            <div style="font-size:20px;font-weight:900" id="prof-name">Yusuf Abubakar (Yushat)</div>
+            <div style="font-size:14px;color:var(--muted);margin-top:2px" id="prof-handle">@yushat · Abuja, Nigeria 🇳🇬</div>
+            <div style="font-size:14px;margin:10px 0;line-height:1.65" id="prof-bio">Building the future of social media 🚀 Founder of <strong>Webond</strong> · Tech Entrepreneur</div>
+            <div style="display:flex;gap:24px;margin:14px 0">
+              <div><div class="p-stat-n" id="stat-posts">342</div><div class="p-stat-l">Posts</div></div>
+              <div><div class="p-stat-n" id="stat-followers">8,412</div><div class="p-stat-l">Followers</div></div>
+              <div><div class="p-stat-n" id="stat-following">1,240</div><div class="p-stat-l">Following</div></div>
+              <div><div class="p-stat-n">2.1M</div><div class="p-stat-l">Impressions</div></div>
+            </div>
+          </div>
+          <div style="display:flex;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+            <div class="p-tab on" onclick="profileTab(this,'posts')">Posts</div>
+            <div class="p-tab" onclick="profileTab(this,'photos')">Photos</div>
+            <div class="p-tab" onclick="profileTab(this,'videos')">Videos</div>
+            <div class="p-tab" onclick="profileTab(this,'saved')">Saved</div>
+            <div class="p-tab" onclick="profileTab(this,'about')">About</div>
+          </div>
+          <div id="profile-tab-content" style="padding:16px"></div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="page" id="page-settings">
+      <div class="page-header"><span class="page-title">Settings & Privacy</span></div>
+      <div class="main" style="flex:1"><div class="settings-layout">
+        <div class="settings-sidebar">
+          <div class="settings-nav-item on" onclick="settingsTab(this,'account')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account</div>
+          <div class="settings-nav-item" onclick="settingsTab(this,'privacy')"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Privacy</div>
+          <div class="settings-nav-item" onclick="settingsTab(this,'notifications')"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications</div>
+          <div class="settings-nav-item" onclick="settingsTab(this,'appearance')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>Appearance</div>
+          <div class="settings-nav-item" onclick="settingsTab(this,'security')"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Security</div>
+          <div class="settings-nav-item" onclick="settingsTab(this,'language')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Language</div>
+          <div class="settings-nav-item" onclick="settingsTab(this,'help')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>Help</div>
+          <div style="margin-top:14px"><div class="settings-nav-item" style="color:var(--red)" onclick="doLogout()"><svg viewBox="0 0 24 24" style="stroke:var(--red)"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>Log Out</div></div>
+        </div>
+        <div class="settings-panel" id="settings-content"></div>
+      </div></div>
+    </div>
+
+  </div><!-- /pages -->
+
+  <!-- MOBILE NAV -->
+  <nav class="mob-nav">
+    <div class="mob-nav-item on" id="mob-home" onclick="goPage('home')"><svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
+    <div class="mob-nav-item" id="mob-explore" onclick="goPage('explore')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Explore</div>
+    <div class="mob-nav-plus"><div class="mob-plus-btn" onclick="openCreatePost()">+</div></div>
+    <div class="mob-nav-item" id="mob-reels" onclick="goPage('reels')"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Reels</div>
+    <div class="mob-nav-item" id="mob-messages" onclick="goPage('messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Msgs</div>
+  </nav>
+</div><!-- /app -->
+
+<!-- STORY MODAL -->
+<div class="overlay" id="story-overlay">
+  <div class="story-full">
+    <div class="story-bars"><div class="story-bar-seg"><div class="story-bar-fill" id="story-bar-fill"></div></div><div class="story-bar-seg" style="background:rgba(255,255,255,.2)"></div><div class="story-bar-seg" style="background:rgba(255,255,255,.2)"></div></div>
+    <div class="story-header">
+      <div class="av" id="st-av" style="width:36px;height:36px">FA</div>
+      <div style="color:#fff"><div style="font-weight:700;font-size:14px" id="st-name">Fatima</div><div style="font-size:11px;opacity:.7" id="st-time">2 min ago</div></div>
+      <button class="story-close-btn" onclick="closeStory()">✕</button>
+    </div>
+    <div class="story-center"><div style="font-size:90px" id="st-emoji">🌅</div><div style="font-size:17px;font-weight:700;text-align:center;padding:0 24px;line-height:1.5" id="st-caption">Abuja nights are magical ✨</div></div>
+    <div class="story-reply"><input class="story-reply-inp" placeholder="Reply to story..." onkeydown="if(event.key==='Enter'){toast('Reply sent!');this.value=''}"><div style="width:42px;height:42px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px" onclick="toast('Reaction sent ❤️')">❤️</div></div>
+  </div>
+</div>
+
+<!-- CREATE POST MODAL -->
+<div class="overlay" id="create-overlay">
+  <div class="modal" style="width:560px;max-width:95vw">
+    <div class="modal-head"><div class="modal-title">Create Post</div><button class="modal-close" onclick="closeCreate()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div style="display:flex;gap:12px;margin-bottom:14px;align-items:flex-start">
+        <div class="av" id="cp-av" style="width:46px;height:46px;flex-shrink:0">YT</div>
+        <div><div style="font-weight:700;font-size:15px" id="cp-name">Yushat</div><select id="cp-audience" style="font-size:12px;border:1.5px solid var(--border);border-radius:8px;padding:4px 10px;color:var(--text);margin-top:4px;outline:none;cursor:pointer"><option>🌍 Public</option><option>👥 Friends</option><option>🔒 Only me</option></select></div>
+      </div>
+      <textarea id="post-text" style="width:100%;border:none;font-size:15px;color:var(--text);resize:none;min-height:110px;line-height:1.7;font-family:inherit;outline:none" placeholder="What's on your mind?"></textarea>
+      <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:10px">
+        <div style="padding:10px 14px;background:var(--bg);font-size:12px;font-weight:600;color:var(--muted)">Add to your post</div>
+        <div style="display:flex;padding:10px 14px;gap:14px">
+          <span style="cursor:pointer;font-size:24px;transition:.15s" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform=''" onclick="toast('Photo/video picker')">📷</span>
+          <span style="cursor:pointer;font-size:24px;transition:.15s" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform=''" onclick="toast('Tag people')">👥</span>
+          <span style="cursor:pointer;font-size:24px;transition:.15s" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform=''" onclick="toast('Add location')">📍</span>
+          <span style="cursor:pointer;font-size:24px;transition:.15s" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform=''" onclick="toast('Add feeling')">😄</span>
+          <span style="cursor:pointer;font-size:24px;transition:.15s" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform=''" onclick="toast('Create poll')">📊</span>
+          <span style="cursor:pointer;font-size:24px;transition:.15s" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform=''" onclick="toast('Add GIF')">🎬</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-gray" onclick="closeCreate()">Cancel</button><button class="btn btn-primary" onclick="submitPost()">Share Post</button></div>
+  </div>
+</div>
+
+<!-- COMMENTS MODAL -->
+<div class="overlay" id="comments-overlay">
+  <div class="modal" style="width:560px;max-width:95vw;max-height:80vh;display:flex;flex-direction:column">
+    <div class="modal-head"><div class="modal-title">Comments</div><button class="modal-close" onclick="closeComments()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div style="flex:1;overflow-y:auto;padding:16px 20px" id="comments-list"></div>
+    <div style="padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0">
+      <div class="av" id="comment-my-av" style="width:36px;height:36px;flex-shrink:0">YT</div>
+      <input id="comment-inp" style="flex:1;padding:9px 14px;background:var(--bg);border-radius:22px;font-size:14px;color:var(--text);font-family:inherit;border:none;outline:none" placeholder="Write a comment..." onkeydown="if(event.key==='Enter')addComment()">
+      <button class="chat-send" onclick="addComment()"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="white" stroke-width="2" stroke-linecap:round stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT PROFILE MODAL -->
+<div class="overlay" id="edit-profile-overlay">
+  <div class="modal" style="width:520px;max-width:95vw">
+    <div class="modal-head"><div class="modal-title">Edit Profile</div><button class="modal-close" onclick="closeEditProfile()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="fgrp"><label class="flbl">Display Name</label><input class="finp" id="ep-name" placeholder="Your full name"></div>
+      <div class="fgrp"><label class="flbl">Username</label><input class="finp" id="ep-username" placeholder="@username"></div>
+      <div class="fgrp"><label class="flbl">Bio</label><textarea class="finp" id="ep-bio" rows="3" style="resize:none;padding-top:10px;line-height:1.6;outline:none" placeholder="Tell the world about yourself..."></textarea></div>
+      <div class="fgrp"><label class="flbl">Location</label><input class="finp" id="ep-location" placeholder="City, Country"></div>
+      <div class="fgrp"><label class="flbl">Website</label><input class="finp" id="ep-website" placeholder="https://yoursite.com"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-gray" onclick="closeEditProfile()">Cancel</button><button class="btn btn-primary" onclick="saveProfile()">Save Changes</button></div>
+  </div>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="search-overlay">
+  <div class="search-box">
+    <div class="search-inp-wrap">
+      <svg width="18" height="18" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="search-main-inp" id="search-inp" placeholder="Search Webond..." oninput="handleSearch(this.value)" onkeydown="if(event.key==='Escape')closeSearch()">
+      <button style="color:var(--muted);font-size:13px;font-weight:600;background:none;border:none;cursor:pointer" onclick="closeSearch()">Cancel</button>
+    </div>
+    <div class="search-results" id="search-results"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast-el"></div>
+<script>
+const DB={
+  user:{name:'Yushat',fullname:'Yusuf Abubakar (Yushat)',handle:'@yushat',bio:'Building the future of social media 🚀 Founder of <strong>Webond</strong> · Tech Entrepreneur · Connect Beyond Limits',location:'Abuja, Nigeria 🇳🇬',website:'webond.com'},
+  stories:[
+    {id:1,user:'Fatima',initials:'FA',bg:'#dbeafe',color:'#1d4ed8',emoji:'🌅',caption:'Abuja nights are magical ✨',time:'2 min ago'},
+    {id:2,user:'Emeka',initials:'EM',bg:'#d1fae5',color:'#065f46',emoji:'🚀',caption:'Building the future! Keep grinding 🔥',time:'18 min ago'},
+    {id:3,user:'Aisha',initials:'AI',bg:'#fce7f3',color:'#9d174d',emoji:'💃',caption:'Happy 10k followers! Love you all 🎉',time:'1 hr ago'},
+    {id:4,user:'Chidi',initials:'CH',bg:'#fef3c7',color:'#92400e',emoji:'⚽',caption:'Match day vibes! Super Eagles 🏆',time:'2 hr ago'},
+    {id:5,user:'Ngozi',initials:'NG',bg:'#ede9fe',color:'#6d28d9',emoji:'🌺',caption:'Nature is my therapy 🌺',time:'3 hr ago'},
+    {id:6,user:'Kano',initials:'KA',bg:'#fef9c3',color:'#854d0e',emoji:'🌟',caption:'Northern Nigeria is beautiful 🌟',time:'4 hr ago'},
+  ],
+  posts:[
+    {id:1,user:'Fatima Aliyu',initials:'FA',bg:'#dbeafe',color:'#1d4ed8',verified:true,time:'2 minutes ago',audience:'🌍 Public',text:'Abuja sunsets never get old 🌅 Every single evening feels like a painted masterpiece. There\'s something truly magical about this city. What city has the most beautiful sunsets in your experience?',hashtags:['Abuja','Nigeria','Sunset','Travel'],mediaType:'photo',mediaLabel:'Photo · Abuja Skyline',reactions:{heart:248,eyes:91,fire:43},comments:34,shares:18,reposts:12,bookmarked:false,liked:false},
+    {id:2,user:'Emeka Obi',initials:'EM',bg:'#d1fae5',color:'#065f46',verified:true,time:'18 minutes ago',audience:'🌍 Public',text:'🚀 Exciting news! AI Translation on Webond is now live — supporting real-time translation in 47 languages. Type in Hausa, your friend reads in French. No barriers, just connection!',hashtags:['NaijaTech','Webond','AI','Innovation'],mediaType:'feature',reactions:{heart:512,clap:203,fire:98},comments:87,shares:56,reposts:203,bookmarked:false,liked:false},
+    {id:3,user:'Aisha Bello',initials:'AI',bg:'#fce7f3',color:'#9d174d',verified:false,time:'1 hour ago',audience:'👥 Friends',text:'Just hit 10,000 followers! 🎉 This community means absolutely everything to me. Every like, comment and share got us here. Drop ❤️ in the comments if you\'ve been with me from day one!',hashtags:['Grateful','10k','Milestone'],mediaType:'grid',reactions:{heart:1240,fire:340,eyes:120},comments:348,shares:91,reposts:45,bookmarked:false,liked:false},
+    {id:4,user:'Chidi Nwosu',initials:'CH',bg:'#fef3c7',color:'#92400e',verified:false,time:'2 hours ago',audience:'🌍 Public',text:'Super Eagles 🦅 looking strong this season! Can we go all the way? Drop your predictions below 👇 Who scores first tomorrow?',hashtags:['NigeriaFootball','AFCON','SuperEagles'],mediaType:'none',reactions:{heart:89,fire:234,laugh:67},comments:156,shares:43,reposts:88,bookmarked:false,liked:false},
+    {id:5,user:'Ngozi Adeyemi',initials:'NG',bg:'#ede9fe',color:'#6d28d9',verified:true,time:'3 hours ago',audience:'🌍 Public',text:'The new Webond platform is absolutely STUNNING 🤩 Full desktop experience, stories, reels, messages — everything in one place. Nigeria is building world-class tech! 🇳🇬',hashtags:['Webond','NaijaTech','ProudlyNigerian'],mediaType:'none',reactions:{heart:678,clap:445,fire:312},comments:92,shares:67,reposts:178,bookmarked:false,liked:false},
+  ],
+  conversations:[
+    {id:1,user:'Fatima Aliyu',initials:'FA',bg:'#dbeafe',color:'#1d4ed8',online:true,preview:'😄 Haha yes! See you there then',time:'just now',unread:3,messages:[
+      {from:'them',text:'Hey Yushat! How\'s the Webond platform coming along? 👀',time:'10:22 AM'},
+      {from:'me',text:'Going amazingly! Just finished the full platform — home, messages, reels, everything 🔥',time:'10:24 AM'},
+      {from:'them',text:'That\'s so exciting! When can I try it?',time:'10:25 AM'},
+      {from:'me',text:'Soon inshallah! Building the best social platform from Nigeria to the world 🚀',time:'10:26 AM'},
+      {from:'them',text:'😄 Haha yes! See you there then',time:'10:27 AM'},
+    ]},
+    {id:2,user:'Emeka Obi',initials:'EM',bg:'#d1fae5',color:'#065f46',online:true,preview:'AI translation is live! Have you tried it?',time:'12m',unread:0,messages:[
+      {from:'them',text:'Bro the AI translation feature is absolutely fire 🔥',time:'9:00 AM'},
+      {from:'me',text:'I know right! 47 languages, real-time. No barriers 🌍',time:'9:01 AM'},
+      {from:'them',text:'AI translation is live! Have you tried it?',time:'9:45 AM'},
+    ]},
+    {id:3,user:'Webond Dev Team',initials:'WB',bg:'#1d4ed8',color:'#fff',online:false,preview:"Yushat: Let's review the prototype today 👀",time:'1h',unread:7,messages:[
+      {from:'them',text:'Team! Phase 1 prototype is complete ✅',time:'8:00 AM'},
+      {from:'them',text:'All screens done: Home, Explore, Reels, Messages, Profile, Settings 🎉',time:'8:01 AM'},
+      {from:'me',text:"Let's review the prototype today 👀",time:'8:30 AM'},
+    ]},
+    {id:4,user:'Aisha Bello',initials:'AI',bg:'#fce7f3',color:'#9d174d',online:false,preview:'You: Thanks so much! Congrats 🎉',time:'3h',unread:0,messages:[
+      {from:'them',text:'Did you see my 10k milestone post? 🎉',time:'7:00 AM'},
+      {from:'me',text:'Thanks so much! Congrats 🎉',time:'7:05 AM'},
+    ]},
+    {id:5,user:'Chidi Nwosu',initials:'CH',bg:'#fef3c7',color:'#92400e',online:false,preview:'When are you launching the full app bro? 🙏',time:'Yesterday',unread:0,messages:[
+      {from:'them',text:'Bro when is Webond launching for real? 🙏',time:'Yesterday'},
+      {from:'me',text:'Very soon! Phase 1 prototype is done, full build starts next!',time:'Yesterday'},
+    ]},
+  ],
+  notifications:[
+    {id:1,unread:true,icon:'❤️',iconBg:'#fff0f3',text:'<strong>Fatima Aliyu</strong> liked your post about the Abuja sunset',time:'2 min ago'},
+    {id:2,unread:true,icon:'💬',iconBg:'#eff6ff',text:'<strong>Emeka Obi</strong> commented: "This is absolutely beautiful! Nigeria is blessed 🌍"',time:'5 min ago'},
+    {id:3,unread:true,icon:'👤',iconBg:'#f0fdf4',text:'<strong>Chidi Nwosu</strong> started following you',time:'18 min ago',action:'follow'},
+    {id:4,unread:true,icon:'🔁',iconBg:'#fef3c7',text:'<strong>Ngozi Adeyemi</strong> reposted your AI Translation post',time:'34 min ago'},
+    {id:5,unread:true,icon:'🌐',iconBg:'#fdf4ff',text:'<strong>Webond</strong> AI Translation is now available in your region! Try it in chat 🎉',time:'1 hr ago'},
+    {id:6,unread:false,icon:'❤️',iconBg:'#fff0f3',text:'<strong>Aisha Bello</strong> and <strong>12 others</strong> liked your comment',time:'2 hr ago'},
+    {id:7,unread:false,icon:'💬',iconBg:'#eff6ff',text:'<strong>Kano Musa</strong> replied to your comment: "Totally agree! 🙌"',time:'3 hr ago'},
+    {id:8,unread:false,icon:'🔥',iconBg:'#fff7ed',text:'Your post is trending in <strong>#NaijaTech</strong> 🔥',time:'5 hr ago'},
+  ],
+  trending:[
+    {tag:'NaijaTech',posts:'42.1k',hot:true},{tag:'AfroBeats2026',posts:'31.4k',hot:true},
+    {tag:'Webond',posts:'19.2k',hot:true},{tag:'Abuja',posts:'28.9k',hot:false},
+    {tag:'NigeriaFootball',posts:'15.6k',hot:false},{tag:'AI2026',posts:'12.3k',hot:false},
+  ],
+  suggestions:[
+    {initials:'EM',bg:'#d1fae5',color:'#065f46',name:'Emeka Obi',sub:'512 mutual friends',following:false},
+    {initials:'CH',bg:'#fef3c7',color:'#92400e',name:'Chidi Nwosu',sub:'128 mutual friends',following:false},
+    {initials:'NG',bg:'#ede9fe',color:'#6d28d9',name:'Ngozi Adeyemi',sub:'74 mutual friends',following:false},
+    {initials:'KA',bg:'#fef9c3',color:'#854d0e',name:'Kano Musa',sub:'38 mutual friends',following:false},
+  ],
+  groups:[
+    {id:1,name:'Naija Tech Hub',emoji:'💻',cover:'#dbeafe',members:'12.4k',desc:"Nigeria's largest tech community",joined:true},
+    {id:2,name:'Abuja Entrepreneurs',emoji:'🚀',cover:'#d1fae5',members:'8.9k',desc:'Connecting Abuja-based founders',joined:true},
+    {id:3,name:'AfroBeats Nation',emoji:'🎵',cover:'#fce7f3',members:'45.2k',desc:'All things Afrobeats & more',joined:false},
+    {id:4,name:'Nigeria Foodies',emoji:'🍛',cover:'#fef3c7',members:'22.1k',desc:'Naija food lovers unite!',joined:false},
+  ],
+  events:[
+    {id:1,name:'WebondCon 2026 – Tech Summit',date:'15',month:'JUN',time:'10:00 AM – 6:00 PM',location:'Transcorp Hilton, Abuja',emoji:'🚀',going:342,interested:1204,status:'going'},
+    {id:2,name:'Naija Tech Meetup – Lagos',date:'22',month:'JUN',time:'2:00 PM – 8:00 PM',location:'Landmark Centre, Lagos',emoji:'💻',going:156,interested:892,status:'interested'},
+    {id:3,name:'AfroBeats Music Festival 2026',date:'05',month:'JUL',time:'4:00 PM – 12:00 AM',location:'Tafawa Balewa Square, Lagos',emoji:'🎵',going:2341,interested:8901,status:'none'},
+    {id:4,name:'Webond Launch Party – Abuja',date:'20',month:'JUL',time:'7:00 PM – Midnight',location:'Wuse 2, Abuja',emoji:'🎉',going:189,interested:654,status:'going'},
+  ],
+  comments:{
+    1:[
+      {user:'Emeka Obi',initials:'EM',bg:'#d1fae5',color:'#065f46',text:'This is absolutely beautiful! Nigeria is truly blessed 🌍❤️',time:'5m',likes:12,liked:false},
+      {user:'Chidi Nwosu',initials:'CH',bg:'#fef3c7',color:'#92400e',text:'Abuja sunsets > everything 🔥🔥',time:'12m',likes:8,liked:false},
+      {user:'Ngozi Adeyemi',initials:'NG',bg:'#ede9fe',color:'#6d28d9',text:'Already planning a trip to Abuja after seeing this! 😍',time:'25m',likes:24,liked:false},
+    ],
+    default:[
+      {user:'Kano Musa',initials:'KA',bg:'#fef9c3',color:'#854d0e',text:'Totally agree! 🙌 Great post Yushat',time:'1h',likes:5,liked:false},
+      {user:'Fatima Aliyu',initials:'FA',bg:'#dbeafe',color:'#1d4ed8',text:'Love this so much ❤️ Keep building!',time:'2h',likes:18,liked:false},
+    ]
+  }
+};
+
+let currentPage='home',currentConvId=1,activePostId=1,openMenuEl=null,storyTimer=null;
+
+// ---- AUTH ----
+function authTab(t){
+  ['login','signup'].forEach(x=>{
+    document.getElementById('tab-'+x).classList.toggle('on',x===t);
+    document.getElementById('form-'+x).classList.toggle('on',x===t);
+  });
+}
+function toggleEye(id,btn){
+  const i=document.getElementById(id);const show=i.type==='password';i.type=show?'text':'password';
+  btn.innerHTML=show?'<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>':'<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+}
+function socialAuth(p){toast('Connecting with '+p+'...');setTimeout(enterApp,1000);}
+function doLogin(){
+  const e=document.getElementById('l-email').value.trim();
+  const p=document.getElementById('l-pass').value;
+  if(!e){toast('Please enter your email ⚠️');return;}
+  if(!p){toast('Please enter your password ⚠️');return;}
+  enterApp();
+}
+function doSignup(){
+  const fn=document.getElementById('s-fn').value.trim();
+  const un=document.getElementById('s-un').value.trim();
+  const em=document.getElementById('s-em').value.trim();
+  const pw=document.getElementById('s-pw').value;
+  if(!fn){toast('Please enter your first name ⚠️');return;}
+  if(!un){toast('Please choose a username ⚠️');return;}
+  if(!em||!em.includes('@')){toast('Please enter a valid email ⚠️');return;}
+  if(pw.length<6){toast('Password must be at least 6 characters ⚠️');return;}
+  DB.user.name=fn;DB.user.fullname=fn+' '+(document.getElementById('s-ln').value||'');
+  DB.user.handle='@'+un.replace('@','');
+  enterApp();
+}
+function enterApp(){
+  document.getElementById('auth').style.display='none';
+  document.getElementById('app').classList.add('on');
+  initApp();
+  toast('Welcome to Webond, '+DB.user.name+'! 🎉');
+}
+
+// ---- INIT ----
+function initApp(){
+  renderStories();renderFeed();renderTrendingWidget();renderSuggestWidget();
+  renderConversations();openConversation(1);renderNotifications();
+  renderGroups();renderEvents();renderReels();renderExplorePage();
+  renderProfileTab('posts');renderSettingsPanel('account');updateUserUI();
+}
+function updateUserUI(){
+  const u=DB.user;const initials=u.name.substring(0,2).toUpperCase();
+  ['sb-av','comp-av','cp-av','comment-my-av','prof-av'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.textContent=initials;
+  });
+  setTxt('sb-uname',u.name);setTxt('sb-uhandle',u.handle);setTxt('comp-name',u.name);
+  setTxt('cp-name',u.name);setTxt('prof-name',u.fullname);
+  setTxt('prof-handle',u.handle+' · '+u.location);
+  const pb=document.getElementById('prof-bio');if(pb)pb.innerHTML=u.bio;
+}
+function setTxt(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}
+
+// ---- NAVIGATION ----
+function goPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('on'));
+  document.querySelectorAll('.mob-nav-item').forEach(i=>i.classList.remove('on'));
+  document.getElementById('page-'+name).classList.add('on');
+  const sb=document.getElementById('sb-'+name);if(sb)sb.classList.add('on');
+  const mb=document.getElementById('mob-'+name);if(mb)mb.classList.add('on');
+  currentPage=name;closeDropdown();
+}
+function tabSwitch(el){
+  const bar=el.closest('.tab-bar')||el.parentElement;
+  bar.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// ---- STORIES ----
+function renderStories(){
+  const row=document.getElementById('stories-row');
+  // Add story button
+  const add=document.createElement('div');
+  add.className='story-item';
+  add.innerHTML='<div class="story-ring mine"><div class="story-av" style="background:var(--primary-xl);color:var(--primary)"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="story-lbl">Add Story</div>';
+  add.onclick=()=>toast('Story creator coming soon!');
+  row.appendChild(add);
+  DB.stories.forEach(s=>{
+    const el=document.createElement('div');el.className='story-item';
+    el.innerHTML=`<div class="story-ring"><div class="story-av" style="background:${s.bg};color:${s.color}">${s.initials}</div></div><div class="story-lbl">${s.user}</div>`;
+    el.onclick=()=>openStory(s);row.appendChild(el);
+  });
+}
+function openStory(s){
+  setTxt('st-name',s.user);setTxt('st-time',s.time);setTxt('st-emoji',s.emoji);setTxt('st-caption',s.caption);
+  const av=document.getElementById('st-av');av.textContent=s.initials;av.style.background=s.bg;av.style.color=s.color;
+  document.getElementById('story-overlay').classList.add('show');
+  const fill=document.getElementById('story-bar-fill');fill.style.animation='none';fill.offsetHeight;fill.style.animation='sfill 4s linear forwards';
+  clearTimeout(storyTimer);storyTimer=setTimeout(closeStory,4200);
+}
+function closeStory(){document.getElementById('story-overlay').classList.remove('show');clearTimeout(storyTimer);}
+
+// ---- FEED ----
+function renderFeed(){
+  const c=document.getElementById('feed-container');c.innerHTML='';
+  DB.posts.forEach(p=>c.appendChild(createPostEl(p)));
+}
+function createPostEl(p){
+  const div=document.createElement('div');div.className='post';div.id='post-'+p.id;
+  const total=Object.values(p.reactions).reduce((a,b)=>a+b,0);
+  const emojis={heart:'❤️',eyes:'😍',fire:'🔥',clap:'👏',laugh:'😄'};
+  const chips=Object.entries(p.reactions).map(([k,v])=>`<span class="react-chip">${emojis[k]||'👍'} ${v}</span>`).join('');
+  let media='';
+  if(p.mediaType==='photo'){
+    media=`<div class="post-media" style="height:260px"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span style="font-size:13px">${p.mediaLabel||'Photo'}</span></div>`;
+  }else if(p.mediaType==='feature'){
+    media=`<div class="feat-banner"><div class="feat-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><div><div style="font-size:14px;font-weight:800;color:#1e3a8a">AI Translation · Now Live on Webond</div><div style="font-size:12px;color:#2563EB;margin-top:2px">47 languages · Real-time · Free for all users</div></div></div>`;
+  }else if(p.mediaType==='grid'){
+    media=`<div class="post-img-grid"><div class="post-img-cell" style="flex:2;height:180px;font-size:44px">📸</div><div style="display:flex;flex-direction:column;flex:1;gap:2px"><div class="post-img-cell" style="flex:1;font-size:30px">🌸</div><div class="post-img-cell" style="flex:1;font-size:30px">🎀<div class="cell-overlay">+4</div></div></div></div>`;
+  }
+  div.innerHTML=`
+    <div class="post-head">
+      <div class="av" style="width:44px;height:44px;background:${p.bg};color:${p.color};flex-shrink:0">${p.initials}</div>
+      <div style="flex:1;margin-left:4px">
+        <div class="post-name">${p.user}${p.verified?' <span style="color:#2563EB;font-size:13px">✓</span>':''}</div>
+        <div class="post-time">${p.time} · ${p.audience}</div>
+      </div>
+      <button class="post-more-btn" onclick="showPostMenu(event,${p.id})"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+    </div>
+    <div class="post-body">${p.text.replace(/\n/g,'<br>')} <br>${p.hashtags.map(h=>`<span class="htag" onclick="goPage('explore')">#${h}</span>`).join(' ')}</div>
+    ${media}
+    <div style="display:flex;gap:6px;padding:8px 16px;flex-wrap:wrap">${chips}</div>
+    <div class="post-stats-row"><span>${total.toLocaleString()} reactions</span><span onclick="openComments(${p.id})">${p.comments} comments · ${p.shares} shares</span></div>
+    <div class="post-acts">
+      <div class="pact${p.liked?' liked':''}" id="lk-${p.id}" onclick="toggleLike(${p.id})"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span id="lkc-${p.id}">${p.liked?'Liked ❤️':'Like'}</span></div>
+      <div class="pact" onclick="openComments(${p.id})"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Comment</div>
+      <div class="pact" onclick="doRepost(${p.id})"><svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span id="rpc-${p.id}">Repost</span></div>
+      <div class="pact${p.bookmarked?' bookmarked':''}" id="bk-${p.id}" onclick="toggleBookmark(${p.id})"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Save</div>
+      <div class="pact" onclick="sharePost(${p.id})"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share</div>
+    </div>`;
+  return div;
+}
+function toggleLike(id){
+  const p=DB.posts.find(x=>x.id===id);if(!p)return;
+  p.liked=!p.liked;p.reactions.heart+=p.liked?1:-1;
+  document.getElementById('lk-'+id).classList.toggle('liked',p.liked);
+  document.getElementById('lkc-'+id).textContent=p.liked?'Liked ❤️':'Like';
+  if(p.liked)toast('Liked ❤️');
+}
+function toggleBookmark(id){
+  const p=DB.posts.find(x=>x.id===id);if(!p)return;
+  p.bookmarked=!p.bookmarked;
+  document.getElementById('bk-'+id).classList.toggle('bookmarked',p.bookmarked);
+  toast(p.bookmarked?'Post saved to bookmarks 🔖':'Removed from bookmarks');
+}
+function doRepost(id){
+  const p=DB.posts.find(x=>x.id===id);if(p){p.reposts++;document.getElementById('rpc-'+id).textContent='Repost ('+p.reposts+')';}
+  toast('Reposted to your followers ✓');
+}
+function sharePost(id){navigator.clipboard?.writeText(location.href+'?post='+id).catch(()=>{});toast('Link copied to clipboard 🔗');}
+
+// ---- POST MENU ----
+function showPostMenu(e,id){
+  e.stopPropagation();closeDropdown();
+  const menu=document.createElement('div');menu.className='dropdown';
+  menu.innerHTML=`
+    <div class="drop-item" onclick="toggleBookmark(${id});closeDropdown()"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Save Post</div>
+    <div class="drop-item" onclick="sharePost(${id});closeDropdown()"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>Share</div>
+    <div class="drop-item" onclick="navigator.clipboard?.writeText('https://webond.com/post/${id}');toast('Link copied!');closeDropdown()"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Copy Link</div>
+    <div class="drop-divider"></div>
+    <div class="drop-item red" onclick="toast('Post hidden from feed');closeDropdown()"><svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide Post</div>
+    <div class="drop-item red" onclick="toast('Post reported. Thank you!');closeDropdown()"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Report Post</div>`;
+  document.body.appendChild(menu);
+  const rect=e.currentTarget.getBoundingClientRect();
+  menu.style.top=(rect.bottom+6)+'px';menu.style.right=(window.innerWidth-rect.right)+'px';
+  openMenuEl=menu;
+}
+function showChatMenu(btn){
+  closeDropdown();
+  const menu=document.createElement('div');menu.className='dropdown';
+  menu.innerHTML=`
+    <div class="drop-item" onclick="toast('Search in chat');closeDropdown()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</div>
+    <div class="drop-item" onclick="toast('Mute notifications');closeDropdown()"><svg viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</div>
+    <div class="drop-divider"></div>
+    <div class="drop-item red" onclick="toast('Conversation cleared');closeDropdown()"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>Clear Chat</div>`;
+  document.body.appendChild(menu);
+  const rect=btn.getBoundingClientRect();
+  menu.style.top=(rect.bottom+6)+'px';menu.style.right=(window.innerWidth-rect.right)+'px';
+  openMenuEl=menu;
+}
+function showUserDrop(btn){
+  closeDropdown();
+  const menu=document.createElement('div');menu.className='dropdown';
+  menu.innerHTML=`
+    <div class="drop-item" onclick="goPage('profile');closeDropdown()"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>View Profile</div>
+    <div class="drop-item" onclick="goPage('settings');closeDropdown()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</div>
+    <div class="drop-divider"></div>
+    <div class="drop-item red" onclick="doLogout()"><svg viewBox="0 0 24 24" style="stroke:var(--red)"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>Log Out</div>`;
+  document.body.appendChild(menu);
+  const rect=btn.getBoundingClientRect();
+  menu.style.bottom=(window.innerHeight-rect.top+8)+'px';menu.style.left=rect.left+'px';
+  openMenuEl=menu;
+}
+function closeDropdown(){if(openMenuEl){openMenuEl.remove();openMenuEl=null;}}
+document.addEventListener('click',closeDropdown);
+
+// ---- WIDGETS ----
+function renderTrendingWidget(){
+  document.getElementById('trending-widget').innerHTML=DB.trending.slice(0,4).map(t=>`
+    <div class="widget-item" style="cursor:pointer" onclick="goPage('explore')">
+      <div style="flex:1"><div style="font-weight:700">#${t.tag}</div><div style="font-size:12px;color:var(--muted)">${t.posts} posts</div></div>
+      <span>${t.hot?'🔥':''}</span>
+    </div>`).join('');
+}
+function renderSuggestWidget(){
+  document.getElementById('suggest-widget').innerHTML=DB.suggestions.map((s,i)=>`
+    <div class="widget-item">
+      <div class="av" style="width:40px;height:40px;background:${s.bg};color:${s.color}">${s.initials}</div>
+      <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px">${s.name}</div><div style="font-size:11px;color:var(--muted)">${s.sub}</div></div>
+      <button class="btn ${s.following?'btn-gray':'btn-primary'} btn-sm" id="sug-${i}" onclick="followSug(${i})">${s.following?'Following':'Follow'}</button>
+    </div>`).join('');
+}
+function followSug(i){
+  DB.suggestions[i].following=!DB.suggestions[i].following;
+  const f=DB.suggestions[i].following;
+  const btn=document.getElementById('sug-'+i);
+  btn.textContent=f?'Following':'Follow';btn.className=`btn ${f?'btn-gray':'btn-primary'} btn-sm`;
+  toast(f?'Following '+DB.suggestions[i].name+'! ✓':'Unfollowed');
+}
+
+// ---- EXPLORE ----
+function renderExplorePage(){
+  const c=document.getElementById('explore-trending-section');
+  c.innerHTML=`
+    <div style="font-size:14px;font-weight:700;color:var(--muted);margin-bottom:10px">🔥 TRENDING TOPICS</div>
+    <div class="explore-trending">${DB.trending.map(t=>`<div class="trend-item"><div><div style="font-weight:700">#${t.tag}</div><div style="font-size:12px;color:var(--muted)">${t.posts} posts this week</div></div><span>${t.hot?'🔥':'📈'}</span></div>`).join('')}</div>
+    <div style="font-size:14px;font-weight:700;color:var(--muted);margin:16px 0 10px">👥 PEOPLE TO FOLLOW</div>
+    <div style="background:var(--card);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow)">
+      ${DB.suggestions.map((s,i)=>`<div style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--border2)"><div class="av" style="width:50px;height:50px;background:${s.bg};color:${s.color};font-size:15px">${s.initials}</div><div style="flex:1"><div style="font-weight:700">${s.name}</div><div style="font-size:12px;color:var(--muted)">${s.sub}</div></div><button class="btn ${s.following?'btn-gray':'btn-primary'} btn-sm" id="exsug-${i}" onclick="followExSug(${i})">${s.following?'Following':'Follow'}</button></div>`).join('')}
+    </div>`;
+}
+function followExSug(i){
+  DB.suggestions[i].following=!DB.suggestions[i].following;
+  const f=DB.suggestions[i].following;
+  document.getElementById('exsug-'+i).textContent=f?'Following':'Follow';
+  document.getElementById('exsug-'+i).className=`btn ${f?'btn-gray':'btn-primary'} btn-sm`;
+  renderSuggestWidget();toast(f?'Following '+DB.suggestions[i].name+'! ✓':'Unfollowed');
+}
+function liveSearch(q){
+  const res=document.getElementById('explore-results');
+  const trend=document.getElementById('explore-trending-section');
+  if(!q.trim()){res.innerHTML='';trend.style.display='';return;}
+  trend.style.display='none';
+  const people=DB.suggestions.filter(s=>s.name.toLowerCase().includes(q.toLowerCase()));
+  const tags=DB.trending.filter(t=>t.tag.toLowerCase().includes(q.toLowerCase()));
+  let html='';
+  if(people.length){html+='<div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">People</div>';html+=people.map(s=>`<div class="search-result" style="background:var(--card);border-radius:var(--r);border:1px solid var(--border);margin-bottom:6px"><div class="av" style="width:44px;height:44px;background:${s.bg};color:${s.color}">${s.initials}</div><div style="flex:1"><div style="font-weight:700">${s.name}</div><div style="font-size:12px;color:var(--muted)">${s.sub}</div></div></div>`).join('');}
+  if(tags.length){html+='<div style="font-size:12px;font-weight:700;color:var(--muted);margin:10px 0 8px">Hashtags</div>';html+=tags.map(t=>`<div class="trend-item" style="background:var(--card);border-radius:var(--r);border:1px solid var(--border);margin-bottom:6px"><div><div style="font-weight:700">#${t.tag}</div><div style="font-size:12px;color:var(--muted)">${t.posts} posts</div></div></div>`).join('');}
+  if(!html)html=`<div style="padding:30px;text-align:center;color:var(--muted)">No results for "${q}"</div>`;
+  res.innerHTML=html;
+}
+function setFilter(el,type){
+  document.querySelectorAll('#explore-filters .btn').forEach(b=>{b.className='btn btn-gray btn-sm';});
+  el.className='btn btn-primary btn-sm';
+  if(type!=='all')toast('Filtering: '+type);
+}
+
+// ---- REELS ----
+function renderReels(){
+  const reels=[
+    {user:'@yushat_live',av:'YT',avBg:'#dbeafe',avColor:'#1d4ed8',caption:'Building the next-gen social platform 🚀',tags:'#Webond #Tech #Nigeria',emoji:'🎬',likes:'48.2k',comments:'1.2k',reposts:'892',sound:'Original Sound · Webond',liked:false},
+    {user:'@fatima_ng',av:'FA',avBg:'#fce7f3',avColor:'#9d174d',caption:'Abuja sunset time lapse 🌅 This city is gorgeous',tags:'#Abuja #Nigeria #Sunset',emoji:'🌅',likes:'32.1k',comments:'876',reposts:'543',sound:'Afrobeats Mix 2026',liked:false},
+    {user:'@emeka_tech',av:'EM',avBg:'#d1fae5',avColor:'#065f46',caption:'5 AI tools every developer needs in 2026 🤖',tags:'#Tech #AI #Developer',emoji:'🤖',likes:'89.4k',comments:'2.3k',reposts:'4.1k',sound:'Tech Vibes Beat',liked:false},
+  ];
+  document.getElementById('reels-container').innerHTML=reels.map((r,i)=>`
+    <div class="reel-card">
+      <div class="reel-bg">${r.emoji}</div>
+      <div class="reel-grad"></div>
+      <div class="reel-right">
+        <div class="reel-btn${r.liked?' rl':''}" id="rl-${i}" onclick="reelLike(${i},this)">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span id="rlc-${i}">${r.likes}</span>
+        </div>
+        <div class="reel-btn" onclick="openComments(1)"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>${r.comments}</span></div>
+        <div class="reel-btn" onclick="toast('Reposted ✓')"><svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>${r.reposts}</span></div>
+        <div class="reel-btn" onclick="sharePost(1)"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg><span>Share</span></div>
+      </div>
+      <div class="reel-bottom">
+        <div class="reel-user">
+          <div class="av" style="width:40px;height:40px;background:${r.avBg};color:${r.avColor};border:2px solid rgba(255,255,255,.6)">${r.av}</div>
+          <div style="color:#fff"><div style="font-weight:700;font-size:14px">${r.user}</div><div style="font-size:12px;opacity:.8">Abuja, Nigeria</div></div>
+          <button style="margin-left:auto;background:transparent;border:1.5px solid rgba(255,255,255,.7);color:#fff;padding:7px 18px;border-radius:22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit" onclick="toast('Following! ✓')">Follow</button>
+        </div>
+        <div class="reel-caption">${r.caption} <span style="color:#93c5fd">${r.tags}</span></div>
+        <div class="reel-sound"><div class="sound-disc"></div><div class="sound-bar"><div class="sound-progress"></div></div><span style="color:rgba(255,255,255,.7);font-size:11px;font-weight:700">${r.sound}</span></div>
+      </div>
+    </div>`).join('');
+}
+function reelLike(i,el){el.classList.toggle('rl');toast(el.classList.contains('rl')?'Liked! ❤️':'Unliked');}
+
+// ---- MESSAGES ----
+function renderConversations(){
+  document.getElementById('convs-list').innerHTML=DB.conversations.map(c=>`
+    <div class="conv-item${c.id===currentConvId?' on':''}" id="conv-${c.id}" onclick="openConversation(${c.id})">
+      <div class="${c.online?'online-wrap':''}">
+        <div class="av" style="width:48px;height:48px;background:${c.bg};color:${c.color}">${c.initials}</div>
+        ${c.online?'<div class="online-dot"></div>':''}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px"><span class="conv-name">${c.user}</span><span class="conv-time">${c.time}</span></div>
+        <div class="conv-preview">${c.preview}</div>
+      </div>
+      ${c.unread>0?`<div class="unread-cnt">${c.unread}</div>`:''}
+    </div>`).join('');
+}
+function filterConvs(q){
+  document.querySelectorAll('.conv-item').forEach(el=>{el.style.display=el.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';});
+}
+function openConversation(id){
+  currentConvId=id;const conv=DB.conversations.find(c=>c.id===id);if(!conv)return;
+  conv.unread=0;
+  document.querySelectorAll('.conv-item').forEach(el=>el.classList.remove('on'));
+  const el=document.getElementById('conv-'+id);if(el)el.classList.add('on');
+  const av=document.getElementById('chat-av');av.textContent=conv.initials;av.style.background=conv.bg;av.style.color=conv.color;
+  setTxt('chat-pname',conv.user);
+  const st=document.getElementById('chat-status');
+  st.textContent=conv.online?'● Active now':'● Last seen recently';
+  st.style.color=conv.online?'var(--green)':'var(--muted)';
+  const msgs=document.getElementById('chat-msgs');
+  msgs.innerHTML='<div class="chat-date">Today</div>';
+  conv.messages.forEach(m=>{
+    const b=document.createElement('div');b.className='bubble '+(m.from==='me'?'b-out':'b-in');b.textContent=m.text;msgs.appendChild(b);
+    const t=document.createElement('div');t.className='btime'+(m.from==='me'?' out':'');t.textContent=m.time+(m.from==='me'?' ✓✓':'');msgs.appendChild(t);
+  });
+  msgs.scrollTop=msgs.scrollHeight;
+  renderConversations();
+  const badge=document.getElementById('msg-badge');
+  const total=DB.conversations.reduce((a,c)=>a+c.unread,0);
+  badge.textContent=total;badge.style.display=total>0?'':'none';
+}
+function sendMessage(){
+  const inp=document.getElementById('chat-text');const text=inp.value.trim();if(!text)return;
+  const conv=DB.conversations.find(c=>c.id===currentConvId);if(!conv)return;
+  conv.messages.push({from:'me',text,time:'Just now'});conv.preview='You: '+text;conv.time='just now';
+  const msgs=document.getElementById('chat-msgs');
+  const b=document.createElement('div');b.className='bubble b-out';b.textContent=text;msgs.appendChild(b);
+  const t=document.createElement('div');t.className='btime out';t.textContent='Just now ✓✓';msgs.appendChild(t);
+  inp.value='';msgs.scrollTop=msgs.scrollHeight;renderConversations();
+  setTimeout(()=>{
+    const replies=['Got it! 😊',"That's amazing! 🔥","Can't wait! 🚀","Let's do it! 💪","Absolutely! 🎉","Love that! ❤️",'100%! 🙌'];
+    const r=replies[Math.floor(Math.random()*replies.length)];
+    conv.messages.push({from:'them',text:r,time:'Just now'});conv.preview=r;
+    const rb=document.createElement('div');rb.className='bubble b-in';rb.textContent=r;msgs.appendChild(rb);
+    const rt=document.createElement('div');rt.className='btime';rt.textContent='Just now';msgs.appendChild(rt);
+    msgs.scrollTop=msgs.scrollHeight;renderConversations();
+  },900+Math.random()*700);
+}
+
+// ---- NOTIFICATIONS ----
+function renderNotifications(){
+  document.getElementById('notifs-list').innerHTML=DB.notifications.map(n=>`
+    <div class="notif-item${n.unread?' unread':''}" onclick="markRead(${n.id})">
+      <div class="notif-ico" style="background:${n.iconBg}">${n.icon}</div>
+      <div style="flex:1"><div style="font-size:14px;line-height:1.5">${n.text}</div><div style="font-size:12px;color:var(--muted);margin-top:3px">${n.time}</div></div>
+      ${n.action==='follow'?`<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();this.textContent='Following ✓';this.className='btn btn-gray btn-sm';toast('Following back! ✓')">Follow back</button>`:''}
+    </div>`).join('');
+  const u=DB.notifications.filter(n=>n.unread).length;
+  const badge=document.getElementById('notif-badge');
+  badge.textContent=u;badge.style.display=u>0?'':'none';
+}
+function markRead(id){const n=DB.notifications.find(x=>x.id===id);if(n)n.unread=false;renderNotifications();}
+function markAllRead(){DB.notifications.forEach(n=>n.unread=false);renderNotifications();toast('All notifications marked as read ✓');}
+
+// ---- GROUPS ----
+function renderGroups(){
+  document.getElementById('groups-list').innerHTML=DB.groups.map(g=>`
+    <div class="group-card">
+      <div class="group-cover" style="background:${g.cover}">${g.emoji}</div>
+      <div class="group-body">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+          <div><div class="group-name">${g.name}</div><div class="group-meta">${g.members} members · ${g.desc}</div></div>
+          <button class="btn ${g.joined?'btn-gray':'btn-primary'} btn-sm" onclick="toggleGroup(${g.id},this)">${g.joined?'Joined ✓':'Join'}</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function toggleGroup(id,btn){
+  const g=DB.groups.find(x=>x.id===id);if(!g)return;
+  g.joined=!g.joined;
+  btn.textContent=g.joined?'Joined ✓':'Join';btn.className=`btn ${g.joined?'btn-gray':'btn-primary'} btn-sm`;
+  toast(g.joined?'Joined '+g.name+'! 🎉':'Left '+g.name);
+}
+
+// ---- EVENTS ----
+function renderEvents(){
+  document.getElementById('events-list').innerHTML=DB.events.map(e=>`
+    <div class="event-card">
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <div class="event-date-badge"><div class="event-date-day">${e.date}</div><div class="event-date-mon">${e.month}</div></div>
+        <div style="flex:1">
+          <div style="font-size:16px;font-weight:800;margin-bottom:4px">${e.emoji} ${e.name}</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:2px">🕐 ${e.time}</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:10px">📍 ${e.location}</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px"><strong>${e.going}</strong> going · <strong>${e.interested}</strong> interested</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn ${e.status==='going'?'btn-primary':'btn-gray'} btn-sm" onclick="rsvp(${e.id},'going')">${e.status==='going'?'✓ Going':'Going'}</button>
+            <button class="btn ${e.status==='interested'?'btn-outline':'btn-gray'} btn-sm" onclick="rsvp(${e.id},'interested')">${e.status==='interested'?'✓ Interested':'Interested'}</button>
+            <button class="btn btn-gray btn-sm" onclick="sharePost(${e.id})">Share</button>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function rsvp(id,status){
+  const e=DB.events.find(x=>x.id===id);if(!e)return;
+  e.status=e.status===status?'none':status;renderEvents();
+  toast(e.status===status?'You\'re '+status+' this event! 🎉':'RSVP removed');
+}
+
+// ---- PROFILE ----
+function profileTab(el,tab){
+  document.querySelectorAll('.p-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');renderProfileTab(tab);
+}
+function renderProfileTab(tab){
+  const c=document.getElementById('profile-tab-content');
+  if(tab==='posts'){
+    c.innerHTML=`<div style="display:flex;flex-direction:column;gap:14px">${DB.posts.slice(0,3).map(p=>`<div style="background:var(--bg);border-radius:var(--r2);padding:14px;border:1px solid var(--border)"><div style="font-size:14px;line-height:1.6;margin-bottom:8px">${p.text.substring(0,120)}...</div><div style="display:flex;gap:8px;flex-wrap:wrap">${p.hashtags.map(h=>`<span style="font-size:12px;color:var(--primary);font-weight:600">#${h}</span>`).join(' ')}</div></div>`).join('')}</div>`;
+  }else if(tab==='photos'){
+    c.innerHTML=`<div class="media-grid">${['📸','🌅','🏙️','🌸','🌺','📷','🌊','🏔️','🌃','🎑'].map(i=>`<div class="media-cell">${i}</div>`).join('')}</div>`;
+  }else if(tab==='videos'){
+    c.innerHTML=`<div class="media-grid">${['🎬','📹','🎥','🎞️','📽️','🎦'].map(i=>`<div class="media-cell">${i}</div>`).join('')}</div>`;
+  }else if(tab==='saved'){
+    c.innerHTML='<div class="empty-state"><div class="ico">🔖</div><h3>No saved posts yet</h3><p>Posts you save will appear here</p></div>';
+  }else if(tab==='about'){
+    const u=DB.user;
+    c.innerHTML=`<div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;gap:10px;align-items:center"><span style="font-size:18px">📍</span><span><strong>Location:</strong> ${u.location}</span></div>
+      <div style="display:flex;gap:10px;align-items:center"><span style="font-size:18px">🔗</span><span><strong>Website:</strong> <a style="color:var(--primary);cursor:pointer">${u.website||'Not set'}</a></span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px">💼</span><div><strong>Work:</strong> Founder & CEO at Webond<br><span style="font-size:13px;color:var(--muted)">Jan 2025 – Present</span></div></div>
+      <div style="display:flex;gap:10px;align-items:center"><span style="font-size:18px">📅</span><span><strong>Joined:</strong> January 2025</span></div>
+    </div>`;
+  }
+}
+function openEditProfile(){
+  const u=DB.user;
+  document.getElementById('ep-name').value=u.fullname;
+  document.getElementById('ep-username').value=u.handle.replace('@','');
+  document.getElementById('ep-bio').value=u.bio.replace(/<[^>]+>/g,'');
+  document.getElementById('ep-location').value=u.location;
+  document.getElementById('ep-website').value=u.website||'';
+  document.getElementById('edit-profile-overlay').classList.add('show');
+}
+function closeEditProfile(){document.getElementById('edit-profile-overlay').classList.remove('show');}
+function saveProfile(){
+  DB.user.fullname=document.getElementById('ep-name').value;
+  DB.user.handle='@'+document.getElementById('ep-username').value.replace('@','');
+  DB.user.bio=document.getElementById('ep-bio').value;
+  DB.user.location=document.getElementById('ep-location').value;
+  DB.user.website=document.getElementById('ep-website').value;
+  updateUserUI();closeEditProfile();toast('Profile updated successfully ✓');
+}
+function shareProfile(){navigator.clipboard?.writeText(location.href+'?user='+DB.user.handle).catch(()=>{});toast('Profile link copied! 🔗');}
+
+// ---- SETTINGS ----
+function settingsTab(el,tab){
+  document.querySelectorAll('.settings-nav-item').forEach(i=>i.classList.remove('on'));el.classList.add('on');renderSettingsPanel(tab);
+}
+function renderSettingsPanel(tab){
+  const c=document.getElementById('settings-content');
+  const panels={
+    account:`<div class="settings-panel-title">Account Settings</div>
+      <div style="display:flex;align-items:center;gap:16px;padding:16px;background:var(--bg);border-radius:var(--r);margin-bottom:20px;border:1px solid var(--border)">
+        <div class="av" style="width:64px;height:64px;font-size:20px">${DB.user.name.substring(0,2).toUpperCase()}</div>
+        <div style="flex:1"><div style="font-size:17px;font-weight:800">${DB.user.name}</div><div style="color:var(--muted)">${DB.user.handle}</div></div>
+        <button class="btn btn-primary btn-sm" onclick="openEditProfile()">Edit Profile</button>
+      </div>
+      <div class="settings-section-title">Account Info</div>
+      <div class="settings-row"><div class="settings-row-ico">📧</div><div style="flex:1"><div class="settings-row-title">Email</div><div class="settings-row-sub">yushat@webond.com</div></div><button class="btn btn-gray btn-xs" onclick="toast('Email change coming soon!')">Change</button></div>
+      <div class="settings-row"><div class="settings-row-ico">📱</div><div style="flex:1"><div class="settings-row-title">Phone</div><div class="settings-row-sub">+234 800 000 0000</div></div><button class="btn btn-gray btn-xs" onclick="toast('Phone change coming soon!')">Change</button></div>
+      <div class="settings-row"><div class="settings-row-ico">🔑</div><div style="flex:1"><div class="settings-row-title">Password</div><div class="settings-row-sub">Last changed 30 days ago</div></div><button class="btn btn-gray btn-xs" onclick="toast('Password reset email sent! 📧')">Change</button></div>
+      <div class="settings-section-title">Danger Zone</div>
+      <div class="settings-row"><div class="settings-row-ico">🗑️</div><div style="flex:1"><div class="settings-row-title" style="color:var(--red)">Delete Account</div><div class="settings-row-sub">Permanently remove your account and data</div></div><button class="btn btn-red btn-xs" onclick="toast('Contact support to delete your account')">Delete</button></div>`,
+    privacy:`<div class="settings-panel-title">Privacy Settings</div>
+      <div class="settings-section-title">Visibility</div>
+      <div class="settings-row"><div class="settings-row-ico">👁️</div><div style="flex:1"><div class="settings-row-title">Profile Visibility</div><div class="settings-row-sub">Who can see your profile</div></div><select style="font-size:13px;border:1px solid var(--border);border-radius:8px;padding:5px 10px;outline:none"><option>Public</option><option>Friends Only</option><option>Private</option></select></div>
+      <div class="settings-row"><div class="settings-row-ico">💬</div><div style="flex:1"><div class="settings-row-title">Who can message you</div></div><select style="font-size:13px;border:1px solid var(--border);border-radius:8px;padding:5px 10px;outline:none"><option>Everyone</option><option>Friends Only</option><option>Nobody</option></select></div>
+      <div class="settings-section-title">Activity</div>
+      <div class="settings-row"><div class="settings-row-ico">🟢</div><div style="flex:1"><div class="settings-row-title">Show Active Status</div><div class="settings-row-sub">Let others see when you're online</div></div><div class="toggle on" onclick="this.classList.toggle('on');toast('Active status updated')"></div></div>
+      <div class="settings-row"><div class="settings-row-ico">👀</div><div style="flex:1"><div class="settings-row-title">Read Receipts</div><div class="settings-row-sub">Show when you've read messages</div></div><div class="toggle on" onclick="this.classList.toggle('on');toast('Read receipts updated')"></div></div>`,
+    notifications:`<div class="settings-panel-title">Notification Settings</div>
+      <div class="settings-section-title">Push Notifications</div>
+      <div class="settings-row"><div class="settings-row-ico">❤️</div><div style="flex:1"><div class="settings-row-title">Likes & Reactions</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="settings-row"><div class="settings-row-ico">💬</div><div style="flex:1"><div class="settings-row-title">Comments</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="settings-row"><div class="settings-row-ico">👤</div><div style="flex:1"><div class="settings-row-title">New Followers</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="settings-row"><div class="settings-row-ico">📨</div><div style="flex:1"><div class="settings-row-title">Messages</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="settings-section-title">Email</div>
+      <div class="settings-row"><div class="settings-row-ico">📧</div><div style="flex:1"><div class="settings-row-title">Weekly Digest</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="settings-row"><div class="settings-row-ico">🎯</div><div style="flex:1"><div class="settings-row-title">Marketing Emails</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>`,
+    appearance:`<div class="settings-panel-title">Appearance</div>
+      <div class="settings-row"><div class="settings-row-ico">🌙</div><div style="flex:1"><div class="settings-row-title">Dark Mode</div><div class="settings-row-sub">Switch to dark theme (coming soon)</div></div><div class="toggle" onclick="this.classList.toggle('on');toast('Dark mode coming soon! 🌙')"></div></div>
+      <div class="settings-row"><div class="settings-row-ico">🎨</div><div style="flex:1"><div class="settings-row-title">Accent Color</div></div><div style="display:flex;gap:8px">${['#2563EB','#7C3AED','#EC4899','#10B981','#F59E0B','#EF4444'].map(col=>`<div style="width:24px;height:24px;border-radius:50%;background:${col};cursor:pointer;border:2px solid transparent;transition:.15s" onclick="setAccent('${col}',this)" title="${col}"></div>`).join('')}</div></div>
+      <div class="settings-row"><div class="settings-row-ico">🤖</div><div style="flex:1"><div class="settings-row-title">AI Auto-Translation</div><div class="settings-row-sub">Translate posts & messages automatically</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="settings-row"><div class="settings-row-ico">🔊</div><div style="flex:1"><div class="settings-row-title">Autoplay Videos</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>`,
+    security:`<div class="settings-panel-title">Security</div>
+      <div class="settings-row"><div class="settings-row-ico">🔐</div><div style="flex:1"><div class="settings-row-title">Two-Factor Authentication</div><div class="settings-row-sub">Add extra security to your account</div></div><div class="toggle" onclick="this.classList.toggle('on');toast('2FA enabled! ✓')"></div></div>
+      <div class="settings-row"><div class="settings-row-ico">📱</div><div style="flex:1"><div class="settings-row-title">Trusted Devices</div></div><button class="btn btn-gray btn-xs" onclick="toast('Manage devices coming soon!')">Manage</button></div>
+      <div class="settings-row"><div class="settings-row-ico">🌐</div><div style="flex:1"><div class="settings-row-title">Login History</div></div><button class="btn btn-gray btn-xs" onclick="toast('Login history coming soon!')">View</button></div>`,
+    language:`<div class="settings-panel-title">Language & Region</div>
+      <div class="settings-row"><div class="settings-row-ico">🌍</div><div style="flex:1"><div class="settings-row-title">Display Language</div></div><select style="font-size:13px;border:1px solid var(--border);border-radius:8px;padding:6px 12px;outline:none"><option>English</option><option>Hausa</option><option>Yoruba</option><option>Igbo</option><option>French</option><option>Arabic</option></select></div>
+      <div class="settings-row"><div class="settings-row-ico">🌐</div><div style="flex:1"><div class="settings-row-title">AI Translation</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>`,
+    help:`<div class="settings-panel-title">Help & Support</div>
+      <div class="page-card" onclick="toast('Help Center coming soon!')"><span style="font-size:28px">📚</span><div><div style="font-weight:700">Help Center</div><div style="font-size:13px;color:var(--muted)">Find answers to common questions</div></div></div>
+      <div class="page-card" onclick="toast('Support chat coming soon!')"><span style="font-size:28px">💬</span><div><div style="font-weight:700">Contact Support</div><div style="font-size:13px;color:var(--muted)">Chat with our support team</div></div></div>
+      <div class="page-card" onclick="toast('Bug report submitted! Thank you 🙏')"><span style="font-size:28px">🐛</span><div><div style="font-weight:700">Report a Bug</div><div style="font-size:13px;color:var(--muted)">Help us improve Webond</div></div></div>
+      <div class="page-card" onclick="toast('Opening terms...')"><span style="font-size:28px">📋</span><div><div style="font-weight:700">Terms of Service</div></div></div>
+      <div style="margin-top:20px;padding:16px;background:var(--bg);border-radius:var(--r);text-align:center;font-size:12px;color:var(--muted)">Webond v1.0.0 · Built with ❤️ by Yushat · © 2026</div>`,
+  };
+  c.innerHTML=panels[tab]||panels.account;
+}
+function setAccent(col,el){
+  document.documentElement.style.setProperty('--primary',col);
+  document.querySelectorAll('[onclick*="setAccent"]').forEach(e=>e.style.borderColor='transparent');
+  el.style.borderColor='#000';toast('Theme color updated! 🎨');
+}
+
+// ---- CREATE POST ----
+function openCreatePost(type){
+  document.getElementById('create-overlay').classList.add('show');
+  const ta=document.getElementById('post-text');
+  if(type==='live'){closeCreate();toast('Go Live coming soon! 🎥');return;}
+  ta.value=type==='feeling'?'I\'m feeling ':'';
+  setTimeout(()=>ta.focus(),150);
+}
+function closeCreate(){document.getElementById('create-overlay').classList.remove('show');document.getElementById('post-text').value='';}
+function submitPost(){
+  const text=document.getElementById('post-text').value.trim();
+  if(!text){toast('Please write something first ✍️');return;}
+  const audience=document.getElementById('cp-audience').value;
+  const newPost={id:Date.now(),user:DB.user.fullname,initials:DB.user.name.substring(0,2).toUpperCase(),bg:'#dbeafe',color:'#1d4ed8',verified:false,time:'Just now',audience,text,hashtags:(text.match(/#\w+/g)||[]).map(h=>h.slice(1)),mediaType:'none',reactions:{heart:0},comments:0,shares:0,reposts:0,bookmarked:false,liked:false};
+  DB.posts.unshift(newPost);closeCreate();renderFeed();toast('Post shared! 🎉');
+}
+
+// ---- COMMENTS ----
+function openComments(postId){
+  activePostId=postId||1;
+  const comments=DB.comments[activePostId]||DB.comments.default;
+  document.getElementById('comments-list').innerHTML=comments.map((c,i)=>`
+    <div class="comment-item">
+      <div class="av" style="width:36px;height:36px;background:${c.bg};color:${c.color};flex-shrink:0">${c.initials}</div>
+      <div class="comment-bubble">
+        <div class="comment-author">${c.user} <span style="font-size:11px;font-weight:400;color:var(--muted)">· ${c.time}</span></div>
+        <div class="comment-text">${c.text}</div>
+        <span class="comment-act${c.liked?' liked':''}" id="cla-${i}" onclick="likeComment(${i})">${c.liked?'❤️':'🤍'} ${c.likes}</span>
+        <span class="comment-act" onclick="toast('Reply coming soon!')">Reply</span>
+      </div>
+    </div>`).join('');
+  document.getElementById('comments-overlay').classList.add('show');
+}
+function closeComments(){document.getElementById('comments-overlay').classList.remove('show');}
+function likeComment(i){
+  const c=(DB.comments[activePostId]||DB.comments.default)[i];
+  c.liked=!c.liked;c.likes+=c.liked?1:-1;
+  const el=document.getElementById('cla-'+i);el.textContent=(c.liked?'❤️':'🤍')+' '+c.likes;el.classList.toggle('liked',c.liked);
+}
+function addComment(){
+  const inp=document.getElementById('comment-inp');const text=inp.value.trim();if(!text)return;
+  if(!DB.comments[activePostId])DB.comments[activePostId]=[...DB.comments.default];
+  DB.comments[activePostId].push({user:DB.user.name,initials:DB.user.name.substring(0,2).toUpperCase(),bg:'#dbeafe',color:'#1d4ed8',text,time:'Just now',likes:0,liked:false});
+  const p=DB.posts.find(x=>x.id===activePostId);if(p)p.comments++;
+  openComments(activePostId);inp.value='';toast('Comment posted! 💬');
+}
+
+// ---- SEARCH ----
+function openSearch(){document.getElementById('search-overlay').classList.add('show');setTimeout(()=>document.getElementById('search-inp').focus(),100);}
+function closeSearch(){document.getElementById('search-overlay').classList.remove('show');document.getElementById('search-inp').value='';document.getElementById('search-results').innerHTML='';}
+function handleSearch(q){
+  const c=document.getElementById('search-results');if(!q.trim()){c.innerHTML='';return;}
+  const people=DB.suggestions.filter(s=>s.name.toLowerCase().includes(q.toLowerCase()));
+  const tags=DB.trending.filter(t=>t.tag.toLowerCase().includes(q.toLowerCase()));
+  let html='';
+  people.forEach(s=>{html+=`<div class="search-result"><div class="av" style="width:40px;height:40px;background:${s.bg};color:${s.color}">${s.initials}</div><div style="flex:1"><div style="font-weight:700">${s.name}</div><div style="font-size:12px;color:var(--muted)">${s.sub}</div></div></div>`;});
+  tags.forEach(t=>{html+=`<div class="search-result"><div style="width:40px;height:40px;background:var(--primary-l);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:var(--primary);flex-shrink:0">#</div><div style="flex:1"><div style="font-weight:700">#${t.tag}</div><div style="font-size:12px;color:var(--muted)">${t.posts} posts</div></div></div>`;});
+  if(!html)html=`<div style="padding:24px;text-align:center;color:var(--muted)">No results for "${q}"</div>`;
+  c.innerHTML=html;
+}
+
+// ---- LOGOUT ----
+function doLogout(){
+  closeDropdown();
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('auth').style.display='flex';
+  document.getElementById('l-email').value='';document.getElementById('l-pass').value='';
+  toast('Signed out. See you soon! 👋');
+}
+
+// ---- TOAST ----
+let toastTmr;
+function toast(msg){
+  const el=document.getElementById('toast-el');el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTmr);toastTmr=setTimeout(()=>el.classList.remove('show'),2600);
+}
+
+// ---- KEYBOARD & OVERLAY CLOSE ----
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    closeDropdown();closeStory();closeCreate();closeComments();closeEditProfile();closeSearch();
+  }
+});
+document.querySelectorAll('.overlay').forEach(o=>{
+  o.addEventListener('click',e=>{if(e.target===o){o.classList.remove('show');clearTimeout(storyTimer);}});
+});
+document.getElementById('search-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('search-overlay'))closeSearch();});
+</script>
+</body>
+</html>
